@@ -1,7 +1,21 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { initDatabase } from "@/db/db";
 
 const Home = () => {
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await initDatabase();
+      } catch (error) {
+        console.error("Database initialization error:", error);
+      }
+    };
+    init();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white">
       <div className="text-center">

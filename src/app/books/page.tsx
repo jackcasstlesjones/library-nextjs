@@ -1,8 +1,7 @@
-// src/pages/Books.tsx
 import BookList from "@/components/BookList";
 
 import Link from "next/link";
-export default function Books() {
+export default async function Books() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Header */}

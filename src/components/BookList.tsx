@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 interface Book {
   id: number;
@@ -6,27 +6,24 @@ interface Book {
   author: string;
 }
 
-export default function BookList() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [error, setError] = useState<string>("");
+export default async function BookList() {
+  let books: Book[] = [];
+  let error: string | null = null;
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await fetch("/api/books");
-        if (!response.ok) {
-          throw new Error("Failed to fetch books");
-        }
-        const data: Book[] = await response.json();
-        setBooks(data);
-      } catch (error) {
-        setError("Error fetching books. Please try again.");
-        console.log(error);
-      }
-    };
+  try {
+    const response = await fetch("http://localhost:3001/api/books", {
+      cache: "no-store", // Avoids caching for dynamic content
+    });
 
-    fetchBooks();
-  }, []);
+    if (!response.ok) {
+      throw new Error("Failed to fetch books");
+    }
+
+    books = await response.json();
+  } catch (err) {
+    error = "Error fetching books. Please try again.";
+    console.error(err);
+  }
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6">
@@ -40,9 +37,9 @@ export default function BookList() {
             No books available
           </p>
         ) : (
-          books.map((book, index) => (
+          books.map((book) => (
             <li
-              key={index}
+              key={book.id}
               className="flex justify-between items-center p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-all"
             >
               <div>
